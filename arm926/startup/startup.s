@@ -13,7 +13,7 @@
 .global FIQ_Handler
 .global main
 
-.section .text
+.section .text.vector
 .align 4
 vector_table_start:
 vectors = .
@@ -35,7 +35,7 @@ ldr PC, =FIQ_Entry
  FIQ_Entry:   .word FIQ_Handler
 vector_table_end:
 
-
+.section .text.entry
 Reset_Handler:
   B .
   

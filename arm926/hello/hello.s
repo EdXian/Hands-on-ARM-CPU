@@ -19,6 +19,7 @@ ldr r1,[r0,#0]
 //ldr r13,[PC,#4]
 bl func1
 nop
+b .
 
 
 func1:
