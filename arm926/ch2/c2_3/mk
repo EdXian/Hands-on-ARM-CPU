@@ -1,0 +1,12 @@
+arm-none-eabi-as -o ts.o -g ts.s
+arm-none-eabi-gcc -g -c  -mcpu=arm926ej-s t.c -o t.o
+arm-none-eabi-ld -T t.ld ts.o t.o -o t.elf
+arm-none-eabi-nm t.elf
+
+arm-none-eabi-objcopy -O binary t.elf t.bin
+
+#dd if=t.bin of=flash.bin bs=4096 conv=notrunc
+
+#rm *.o *.elf
+
+#qemu-system-arm -M realview-pbx-a9 -kernel t.bin -nographic -serial /dev/null
