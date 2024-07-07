@@ -6,8 +6,8 @@ file.bin must be loaded to 0x10000 ==> . = 0x10000
 ENTRY(reset)
 SECTIONS
 {
-   . = 0x10000;
-   .start . : { ts.o(.text) }
+   . = 0x0000;
+   .start . : { *(.text.reset) }
    .text : { *(.text) }
    .data : { *(.data) }
    .bss : { *(.bss COMMON) }

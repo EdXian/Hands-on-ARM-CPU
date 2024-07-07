@@ -13,7 +13,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************/
-
+#include "stdint.h"
+#include "uart.h"
+#include "nuc980.h"
 typedef unsigned char  u8;
 typedef unsigned short u16;
 typedef unsigned int   u32;
@@ -46,7 +48,32 @@ int v[] = {1,2,3,4,5,6,7,8,9,10};
 int sum;
 
 #include "string.c"
-#include "uart.c"
+
+
+int uart_init(){
+    /* enable UART0 clock */
+    *(uint32_t*)REG_CLK_PCLKEN0 |= 0x10000;
+
+    /* GPF11, GPF12 */
+    *(uint32_t*)REG_SYS_GPF_MFPH = (*(uint32_t*)REG_SYS_GPF_MFPH&0xfff00fff) | 0x11000; // UART0 multi-function
+    
+    *(uint32_t*)REG_UART0_LCR |= 0x07;  /* UART0 line configuration for (115200,n,8,1) */
+   
+    *(uint32_t*)REG_UART0_BAUD |= 0x30000066;   /* 12MHz reference clock input, 115200 */
+}
+
+int uputc(UART *up, char c)
+{
+    while ((inpw(REG_UART0_FSR) & (1<<23))); //waits for TX_FULL bit is clear
+    *(uint32_t*)REG_UART0_THR = c;
+}
+
+int ugetc(UART *up)
+{
+  while( (inpw(REG_UART0_FSR) & (1 << 14)) != 0);  // waits RX not empty
+  return (char)(*((uint32_t*)REG_UART0_RBR));
+}
+
 
 int main()
 {

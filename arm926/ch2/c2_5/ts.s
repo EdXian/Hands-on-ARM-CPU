@@ -15,6 +15,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************/
 
 	.global reset
+.section .text.reset
 reset:
          LDR sp, =stack_top
          BL main
