@@ -13,42 +13,27 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************/
-#include "etimer.h"
 
-typedef volatile struct timer{
-  u32 *base;            // timer's base address; as u32 pointer
-  int tick, hh, mm, ss; // per timer data area
-  char clock[16]; 
-}TIMER;
-volatile TIMER timer[4];  // 4 timers; 2 timers per unit; at 0x00 and 0x20
+// defines.h file
 
+typedef unsigned char  u8;
+typedef unsigned short u16;
+typedef unsigned int   u32;
 
+#define BLUE   0
+#define GREEN  1
+#define RED    2
+#define CYAN   3
+#define YELLOW 4
+#define PURPLE 5
+#define WHITE  6
 
-void timer_init()
-{
+#define  printf  uprintf
 
+#define  SSIZE 1024
+typedef struct proc{
+  struct proc *next;
+  int    *ksp;
+  int    kstack[SSIZE];
+}PROC;
 
-}
-
-void timer_handler(int n) {
-    
-
-} 
-
-void timer_start(int n) // timer_start(0), 1, etc.
-{
-  
-
-}
-
-int timer_clearInterrupt(int n) // timer_start(0), 1, etc.
-{
- 
-
-}
-
-void timer_stop(int n) // timer_start(0), 1, etc.
-{
-
-
-}

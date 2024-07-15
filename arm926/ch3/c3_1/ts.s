@@ -46,7 +46,7 @@ reset_handler:
   /* set SVC stack */
   LDR sp, =svc_stack
   /* copy vector table to address 0 */
-  BL copy_vectors
+  /*BL copy_vectors*/
   /* get Program Status Register */
   MRS r0, cpsr
   /* go in IRQ mode */

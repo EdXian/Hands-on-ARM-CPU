@@ -13,42 +13,21 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************/
-#include "etimer.h"
 
-typedef volatile struct timer{
-  u32 *base;            // timer's base address; as u32 pointer
-  int tick, hh, mm, ss; // per timer data area
-  char clock[16]; 
-}TIMER;
-volatile TIMER timer[4];  // 4 timers; 2 timers per unit; at 0x00 and 0x20
+// interrupts.c file
 
-
-
-void timer_init()
-{
-
-
-}
-
-void timer_handler(int n) {
-    
-
-} 
-
-void timer_start(int n) // timer_start(0), 1, etc.
-{
+int kprintf(char *fmt, ...);
+/*********
+//void __attribute__((interrupt)) kc_handler() {
+void kc_handler() {
   
 
-}
-
-int timer_clearInterrupt(int n) // timer_start(0), 1, etc.
-{
- 
 
 }
-
-void timer_stop(int n) // timer_start(0), 1, etc.
-{
-
-
-}
+***********/
+/* all other handlers are infinite loops */
+void __attribute__((interrupt)) undef_handler(void) { for(;;); }
+void __attribute__((interrupt)) swi_handler(void) { for(;;); }
+void __attribute__((interrupt)) prefetch_abort_handler(void) { for(;;); }
+void __attribute__((interrupt)) data_abort_handler(void) { for(;;); }
+void __attribute__((interrupt)) fiq_handler(void) { for(;;); }

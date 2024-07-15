@@ -1,0 +1,26 @@
+arm-none-eabi-as -mcpu=arm926ej-s -g ts.s -o ts.o
+arm-none-eabi-gcc -c -mcpu=arm926ej-s -g t.c -o t.o
+arm-none-eabi-gcc -c -mcpu=arm926ej-s -I../../driver/nuc980/Include -g hal_uart.c -o hal_uart.o
+arm-none-eabi-gcc -c -mcpu=arm926ej-s -I../../driver/nuc980/Include -g uart.c -o uart.o
+# link to t.elf
+arm-none-eabi-ld -T t.ld ts.o hal_uart.o uart.o t.o -o t.elf
+
+# convert t.elf to t.bin
+arm-none-eabi-objcopy -O binary t.elf t.bin
+
+#rm *.o *.elf
+
+#echo ready to go?
+#read dummy
+
+# run qemu on t.bin
+#qemu-system-arm -M versatilepb -m 128M -kernel t.bin -serial mon:stdio
+
+
+
+ 
+
+
+
+
+

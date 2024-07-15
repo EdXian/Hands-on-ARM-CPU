@@ -50,6 +50,59 @@ int sum;
 #include "string.c"
 
 
+int uart_init(){
+    /* enable UART0 clock */
+    *(uint32_t*)REG_CLK_PCLKEN0 |= 0x10000;
+
+    /* GPF11, GPF12 */
+    *(uint32_t*)REG_SYS_GPF_MFPH = (*(uint32_t*)REG_SYS_GPF_MFPH&0xfff00fff) | 0x11000; // UART0 multi-function
+    
+    *(uint32_t*)REG_UART0_LCR |= 0x07;  /* UART0 line configuration for (115200,n,8,1) */
+   
+    *(uint32_t*)REG_UART0_BAUD |= 0x30000066;   /* 12MHz reference clock input, 115200 */
+}
+
+int uputc(UART *up, char c)
+{
+    while ((inpw(REG_UART0_FSR) & (1<<23))); //waits for TX_FULL bit is clear
+    *(uint32_t*)REG_UART0_THR = c;
+}
+
+int ugetc(UART *up)
+{
+  while( (inpw(REG_UART0_FSR) & (1 << 14)) != 0);  // waits RX not empty
+  return (char)(*((uint32_t*)REG_UART0_RBR));
+}
+
+void irq_chandler()
+{
+
+}
+
+int mkPtable()
+{
+  int i;
+  u32 pentry, *ptable;
+  uprintf("            Welcome to WANIX in Arm\n");
+  uprintf("1. build level-1 pgtable at 16KB\n");
+
+  ptable = (u32 *)0x4000; // page table at 0x4000
+
+  for (i=0; i<4096; i++){ // clear 4K entries to 0
+     ptable[i] = 0;
+  }
+  uprintf("2. fill 258 entries of ptable to ID map 258MB VA to PA\n");
+  pentry = 0 | 0x412;
+  //  pentry = 0 | 0x41E;
+  
+  for (i=0; i<258; i++){
+    ptable[i] = pentry;
+    pentry += 0x100000;   // inc by 1MB
+  }
+  uprintf("3. finished building level-1 page table\n");
+  uprintf("4. return to set TTB, doman and enable MMU\n");
+}
+
 
 int main()
 {

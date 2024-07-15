@@ -1,17 +1,21 @@
 arm-none-eabi-as -mcpu=arm926ej-s -g ts.s -o ts.o
 arm-none-eabi-gcc -g -c -I../../driver/nuc980/Include -mcpu=arm926ej-s ../../driver/nuc980/Source/cache.c  -o cache.o
 arm-none-eabi-gcc -g -c -I../../driver/nuc980/Include -mcpu=arm926ej-s t.c   -o t.o
+arm-none-eabi-gcc -g -c -I../../driver/nuc980/Include -mcpu=arm926ej-s exceptions.c   -o exceptions.o
 arm-none-eabi-gcc -g -c -I../../driver/nuc980/Include  -mcpu=arm926ej-s uart.c   -o uart.o
 
-arm-none-eabi-ld -T t.ld ts.o t.o  cache.o  uart.o -o t.elf
+arm-none-eabi-ld -T t.ld ts.o t.o exceptions.o  cache.o  uart.o -o t.elf
 arm-none-eabi-objcopy -O binary t.elf t.bin
+
 #rm *.o *.elf
 
 #echo ready to go?
 #read dummy
 
+#qemu-system-arm -M realview-pbx-a9 -m 128M -kernel t.bin -serial mon:stdio
+ 
 #qemu-system-arm -M versatilepb -m 128M -kernel t.bin -serial mon:stdio
-
+ 
 
 
  

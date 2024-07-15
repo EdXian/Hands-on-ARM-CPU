@@ -13,42 +13,59 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************/
-#include "etimer.h"
 
-typedef volatile struct timer{
-  u32 *base;            // timer's base address; as u32 pointer
-  int tick, hh, mm, ss; // per timer data area
-  char clock[16]; 
-}TIMER;
-volatile TIMER timer[4];  // 4 timers; 2 timers per unit; at 0x00 and 0x20
-
-
-
-void timer_init()
+int kprintf(char *, ...);
+int strlen(char *s)
 {
+  int i = 0;
+  while(*s){
+    i++; s++;
+  }
+  return i;
+}
 
+int strcmp(char *s1, char *s2)
+{
+  while((*s1 && *s2) && (*s1==*s2)){
+      s1++; s2++;
+  }
+  if ((*s1==0) && (*s2==0))
+    return 0;
+  return(*s1 - *s2);
 
 }
 
-void timer_handler(int n) {
-    
-
-} 
-
-void timer_start(int n) // timer_start(0), 1, etc.
+int strcpy(char *dest, char *src)
 {
-  
-
+  while(*src){
+    *dest++ = *src++;
+  }
+  *dest = 0;
 }
 
-int timer_clearInterrupt(int n) // timer_start(0), 1, etc.
+int kstrcpy(char *dest, char *src)
 {
- 
-
+  while(*src){
+    *dest++ = *src++;
+  }
+  *dest = 0;
 }
 
-void timer_stop(int n) // timer_start(0), 1, etc.
+int atoi(char *s)
 {
+  int v = 0;
+  while (*s){
+    v = 10*v + (*s - '0');
+    s++;
+  }
+  //kprintf("v=%d\n", v);
+  return v;
+}
 
-
+int geti()
+{
+  char s[16];
+  //kgetline(s);
+  kgets(s);
+  return atoi(s);
 }
