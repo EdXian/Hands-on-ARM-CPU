@@ -15,39 +15,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************/
 
 	.text
-.code 32
+	.global reset, sum
+        .extern  IRQ_Handler
+reset:
+  LDR PC, reset_handler_addr
+  b .
+  b .
+  b .
+  b .
+  B .
+  LDR PC, irq_handler_addr
+  b .
 
-.global main, proc0, procsize
-.global reset_handler, tswitch, scheduler, running
+reset_handler_addr:          .word reset_handler
+irq_handler_addr:            .word IRQ_Handler
 
-reset_handler:
-// set SVC sp to proc0 high end 
-  LDR r0, =proc0
-  LDR r1, =procsize
-  LDR r2, [r1, #0]
-  ADD r0, r0, r2
-  MOV sp, r0
+reset_handler:	
+        ldr sp, =stack_top
 
+        ldr r2, =a
+	ldr r0, [r2]
+	ldr r2, =b
+	ldr r1, [r2]
 
-// call main() in C
-  BL  main
+	bl  main
+        b .
+	ldr r2, =c
+	str r0, [r2]
+stop:	b   stop
 	
-tswitch:
-//       1  2  3  4  5  6  7  8  9  10  11  12  13  14
-//       ---------------------------------------------
-// stack=r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r14
-//       ---------------------------------------------
-SAVE:	
-  stmfd	sp!, {r0-r12, lr}
-  LDR r0, =running     // r0=&running
-  LDR r1, [r0, #0]     // r1->runningPROC
-  str sp, [r1, #4]     // running->ksp = sp
-FIND:	
-  bl	scheduler
-RESUME:	
-  LDR r0, =running
-  LDR r1, [r0, #0]     // r1->runningPROC
-  LDR sp, [r1, #4]
-  ldmfd	sp!, {r0-r12, pc}
+	.data
+a:	.word  1
+b:	.word  2
+c:	.word  0
 
-	.end
+	
+	
