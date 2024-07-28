@@ -4,7 +4,7 @@ example.elf:     file format elf32-littlearm
 SYMBOL TABLE:
 00000000 l    d  .text	00000000 .text
 00000448 l    d  .rodata	00000000 .rodata
-0000044c l    d  .bss	00000000 .bss
+20000000 l    d  .bss	00000000 .bss
 00000000 l    d  .ARM.attributes	00000000 .ARM.attributes
 00000000 l    d  .comment	00000000 .comment
 00000000 l    d  .debug_info	00000000 .debug_info
@@ -19,10 +19,10 @@ SYMBOL TABLE:
 00000408 l       .text	00000000 Reset_Handler
 00000008 l       .text	00000000 reserved
 00000000 l    df *ABS*	00000000 main.c
-0000044c l       .bss	00000004 c.4105
+20000000 l       .bss	00000004 c.4105
 00000448 g     O .rodata	00000004 g
 00000000 g       .text	00000000 vector_start
 00000410 g     F .text	00000038 main
-00000450 g     O .bss	00000004 h
+20000004 g     O .bss	00000004 h
 
 
