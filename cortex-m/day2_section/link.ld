@@ -1,0 +1,1 @@
+ENTRY(vector_start)

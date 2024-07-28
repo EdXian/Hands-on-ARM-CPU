@@ -5,8 +5,6 @@ All examples will be demonstrated in a simplest way with minimized code snippers
 
 
 
-
-
 Environment setups:
 
 - a ubuntu destop
@@ -21,11 +19,17 @@ arm-none-eabi-gcc
 
 
 
-| Schedule | Topics                      | Num of lines/instructions |
-| -------- | --------------------------- | ------------------------- |
-| day0     | compiler tools and settings | 0                         |
-| day1     |                             | 12                        |
-|          |                             |                           |
+| Schedule | Topics                  | Num of lines/instructions |
+| -------- | ----------------------- | ------------------------- |
+| day0     | get started             | 12                        |
+| day1     | main function           | 16                        |
+| day2     | section                 | 25                        |
+| day3     | caller / callee / AAPCS |                           |
+| day4     | math                    |                           |
+| day5     | fpu (optional)          |                           |
+|          |                         |                           |
+|          |                         |                           |
+|          |                         |                           |
 
 
 
