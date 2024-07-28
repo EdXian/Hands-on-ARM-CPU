@@ -1,6 +1,6 @@
 # Introduction
 
-This is the lecture for day1.  In this chapter, we will compile our first application and analyze it.
+This is the lecture for day0.  In this chapter, we will compile our first application and analyze it.
 
 Supported device
 
