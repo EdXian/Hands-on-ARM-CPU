@@ -1,0 +1,109 @@
+
+example.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <vector_start>:
+   0:	20002008 	.word	0x20002008
+
+00000004 <reset_entry>:
+   4:	00000409 	.word	0x00000409
+
+00000008 <reserved>:
+	...
+
+00000408 <Reset_Handler>:
+ 408:	46c0      	nop			; (mov r8, r8)
+ 40a:	f000 f833 	bl	474 <main>
+ 40e:	e7fe      	b.n	40e <Reset_Handler+0x6>
+
+00000410 <add>:
+ 410:	b480      	push	{r7}
+ 412:	180a      	adds	r2, r1, r0
+ 414:	1c10      	adds	r0, r2, #0
+ 416:	bc80      	pop	{r7}
+ 418:	4770      	bx	lr
+	...
+
+0000041c <add1>:
+int h;
+
+/*extern add from assembly code*/
+extern int add(int x, int y);
+
+float add1(int x, int y){
+ 41c:	b580      	push	{r7, lr}
+ 41e:	b086      	sub	sp, #24
+ 420:	af00      	add	r7, sp, #0
+ 422:	6078      	str	r0, [r7, #4]
+ 424:	6039      	str	r1, [r7, #0]
+ int a=1;
+ 426:	2301      	movs	r3, #1
+ 428:	617b      	str	r3, [r7, #20]
+ int b =2;
+ 42a:	2302      	movs	r3, #2
+ 42c:	613b      	str	r3, [r7, #16]
+ float c =3;
+ 42e:	4b10      	ldr	r3, [pc, #64]	; (470 <add1+0x54>)
+ 430:	60fb      	str	r3, [r7, #12]
+ float d  =4;
+ 432:	f04f 4381 	mov.w	r3, #1082130432	; 0x40800000
+ 436:	60bb      	str	r3, [r7, #8]
+
+  return add(x, y)+a*b+d/c;
+ 438:	6839      	ldr	r1, [r7, #0]
+ 43a:	6878      	ldr	r0, [r7, #4]
+ 43c:	f7ff ffe8 	bl	410 <add>
+ 440:	4601      	mov	r1, r0
+ 442:	697b      	ldr	r3, [r7, #20]
+ 444:	693a      	ldr	r2, [r7, #16]
+ 446:	fb02 f303 	mul.w	r3, r2, r3
+ 44a:	440b      	add	r3, r1
+ 44c:	ee07 3a90 	vmov	s15, r3
+ 450:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 454:	ed97 6a02 	vldr	s12, [r7, #8]
+ 458:	edd7 6a03 	vldr	s13, [r7, #12]
+ 45c:	eec6 7a26 	vdiv.f32	s15, s12, s13
+ 460:	ee77 7a27 	vadd.f32	s15, s14, s15
+}
+ 464:	eeb0 0a67 	vmov.f32	s0, s15
+ 468:	3718      	adds	r7, #24
+ 46a:	46bd      	mov	sp, r7
+ 46c:	bd80      	pop	{r7, pc}
+ 46e:	bf00      	nop
+ 470:	40400000 	.word	0x40400000
+
+00000474 <main>:
+
+int main(void){
+ 474:	b580      	push	{r7, lr}
+ 476:	b082      	sub	sp, #8
+ 478:	af00      	add	r7, sp, #0
+  *((int*)0xE000ED88) |= 0x00F00000 ;
+ 47a:	4b0c      	ldr	r3, [pc, #48]	; (4ac <main+0x38>)
+ 47c:	681b      	ldr	r3, [r3, #0]
+ 47e:	4a0b      	ldr	r2, [pc, #44]	; (4ac <main+0x38>)
+ 480:	f443 0370 	orr.w	r3, r3, #15728640	; 0xf00000
+ 484:	6013      	str	r3, [r2, #0]
+   int a=1,b=5;
+ 486:	2301      	movs	r3, #1
+ 488:	607b      	str	r3, [r7, #4]
+ 48a:	2305      	movs	r3, #5
+ 48c:	603b      	str	r3, [r7, #0]
+   static float c;
+   c = add1(a,b);
+ 48e:	6839      	ldr	r1, [r7, #0]
+ 490:	6878      	ldr	r0, [r7, #4]
+ 492:	f7ff ffc3 	bl	41c <add1>
+ 496:	eef0 7a40 	vmov.f32	s15, s0
+ 49a:	4b05      	ldr	r3, [pc, #20]	; (4b0 <main+0x3c>)
+ 49c:	edc3 7a00 	vstr	s15, [r3]
+ 4a0:	2300      	movs	r3, #0
+ 4a2:	4618      	mov	r0, r3
+ 4a4:	3708      	adds	r7, #8
+ 4a6:	46bd      	mov	sp, r7
+ 4a8:	bd80      	pop	{r7, pc}
+ 4aa:	bf00      	nop
+ 4ac:	e000ed88 	.word	0xe000ed88
+ 4b0:	20000000 	.word	0x20000000
