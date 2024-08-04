@@ -11,41 +11,41 @@ Disassembly of section .text:
    4:	00000431 	.word	0x00000431
 
 00000008 <nmi_enrty>:
-   8:	00000507 	.word	0x00000507
+   8:	0000050f 	.word	0x0000050f
 
 0000000c <hardfault_entry>:
-   c:	00000513 	.word	0x00000513
+   c:	0000051b 	.word	0x0000051b
 
 00000010 <memange_entry>:
-  10:	0000051f 	.word	0x0000051f
+  10:	00000527 	.word	0x00000527
 
 00000014 <busfault_entry>:
-  14:	0000052b 	.word	0x0000052b
+  14:	00000533 	.word	0x00000533
 
 00000018 <usagefault_entry>:
   18:	00000439 	.word	0x00000439
 
 0000001c <securefault_entry>:
-  1c:	00000543 	.word	0x00000543
+  1c:	0000054b 	.word	0x0000054b
 
 00000020 <svc_entry>:
-  20:	0000054f 	.word	0x0000054f
+  20:	00000557 	.word	0x00000557
 
 00000024 <debugmon_entry>:
-  24:	0000055b 	.word	0x0000055b
+  24:	00000563 	.word	0x00000563
 
 00000028 <pendsv_entry>:
-  28:	00000567 	.word	0x00000567
+  28:	0000056f 	.word	0x0000056f
 
 0000002c <systick_entry>:
-  2c:	00000573 	.word	0x00000573
+  2c:	0000057b 	.word	0x0000057b
 
 00000030 <reserved>:
 	...
 
 00000430 <Reset_Handler>:
  430:	46c0      	nop			; (mov r8, r8)
- 432:	f000 f835 	bl	4a0 <__main>
+ 432:	f000 f839 	bl	4a8 <__main>
  436:	e7fe      	b.n	436 <Reset_Handler+0x6>
 
 00000438 <UsageFault_Handler>:
@@ -54,214 +54,219 @@ Disassembly of section .text:
 void UsageFault_Handler(void){
  438:	b480      	push	{r7}
  43a:	af00      	add	r7, sp, #0
-
-  __asm volatile(
- 43c:	4a17      	ldr	r2, [pc, #92]	; (49c <main+0x40>)
- 43e:	f04f 0300 	mov.w	r3, #0
- 442:	6013      	str	r3, [r2, #0]
- 444:	f3bf 8f4f 	dsb	sy
- 448:	f3bf 8f6f 	isb	sy
- 44c:	f100 0001 	add.w	r0, r0, #1
- 450:	4770      	bx	lr
-    "ISB                    \n"
     "ADD R0, R0, #1         \n" // Increase flag if UsageFault has happened
     "BX  LR                 \n"
   );
+*/
 
+  *((int*)0xE000ED88) |= 0x00F00000 ;
+ 43c:	4b05      	ldr	r3, [pc, #20]	; (454 <UsageFault_Handler+0x1c>)
+ 43e:	681b      	ldr	r3, [r3, #0]
+ 440:	4a04      	ldr	r2, [pc, #16]	; (454 <UsageFault_Handler+0x1c>)
+ 442:	f443 0370 	orr.w	r3, r3, #15728640	; 0xf00000
+ 446:	6013      	str	r3, [r2, #0]
 }
+ 448:	bf00      	nop
+ 44a:	46bd      	mov	sp, r7
+ 44c:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 450:	4770      	bx	lr
  452:	bf00      	nop
- 454:	46bd      	mov	sp, r7
- 456:	f85d 7b04 	ldr.w	r7, [sp], #4
- 45a:	4770      	bx	lr
+ 454:	e000ed88 	.word	0xe000ed88
 
-0000045c <main>:
+00000458 <main>:
 
 
 int main(void){
- 45c:	b480      	push	{r7}
- 45e:	b083      	sub	sp, #12
- 460:	af00      	add	r7, sp, #0
-   //p();
-
+ 458:	b480      	push	{r7}
+ 45a:	b083      	sub	sp, #12
+ 45c:	af00      	add	r7, sp, #0
    /*Hardfault handler*/
   //int a;
   // a = *(int*)0xFFFFFFFF ;
+
+  /*Usage fault*/ 
   *(int*)0xE000ED24 |= 2 << 17; 
- 462:	4b0d      	ldr	r3, [pc, #52]	; (498 <main+0x3c>)
- 464:	681b      	ldr	r3, [r3, #0]
- 466:	4a0c      	ldr	r2, [pc, #48]	; (498 <main+0x3c>)
- 468:	f443 2380 	orr.w	r3, r3, #262144	; 0x40000
- 46c:	6013      	str	r3, [r2, #0]
+ 45e:	4b11      	ldr	r3, [pc, #68]	; (4a4 <main+0x4c>)
+ 460:	681b      	ldr	r3, [r3, #0]
+ 462:	4a10      	ldr	r2, [pc, #64]	; (4a4 <main+0x4c>)
+ 464:	f443 2380 	orr.w	r3, r3, #262144	; 0x40000
+ 468:	6013      	str	r3, [r2, #0]
  float c=1.0,b=1.0;
- 46e:	f04f 537e 	mov.w	r3, #1065353216	; 0x3f800000
- 472:	607b      	str	r3, [r7, #4]
- 474:	f04f 537e 	mov.w	r3, #1065353216	; 0x3f800000
- 478:	603b      	str	r3, [r7, #0]
+ 46a:	f04f 537e 	mov.w	r3, #1065353216	; 0x3f800000
+ 46e:	607b      	str	r3, [r7, #4]
+ 470:	f04f 537e 	mov.w	r3, #1065353216	; 0x3f800000
+ 474:	603b      	str	r3, [r7, #0]
   b=b/c;
- 47a:	edd7 6a00 	vldr	s13, [r7]
- 47e:	ed97 7a01 	vldr	s14, [r7, #4]
- 482:	eec6 7a87 	vdiv.f32	s15, s13, s14
- 486:	edc7 7a00 	vstr	s15, [r7]
- 48a:	2300      	movs	r3, #0
+ 476:	edd7 6a00 	vldr	s13, [r7]
+ 47a:	ed97 7a01 	vldr	s14, [r7, #4]
+ 47e:	eec6 7a87 	vdiv.f32	s15, s13, s14
+ 482:	edc7 7a00 	vstr	s15, [r7]
 
- 48c:	4618      	mov	r0, r3
- 48e:	370c      	adds	r7, #12
- 490:	46bd      	mov	sp, r7
- 492:	f85d 7b04 	ldr.w	r7, [sp], #4
- 496:	4770      	bx	lr
- 498:	e000ed24 	.word	0xe000ed24
- 49c:	e000e00c 	.word	0xe000e00c
+  // the fpu is enabled...
+   b=b/c;
+ 486:	edd7 6a00 	vldr	s13, [r7]
+ 48a:	ed97 7a01 	vldr	s14, [r7, #4]
+ 48e:	eec6 7a87 	vdiv.f32	s15, s13, s14
+ 492:	edc7 7a00 	vstr	s15, [r7]
+ 496:	2300      	movs	r3, #0
 
-000004a0 <__main>:
- 4a0:	b580      	push	{r7, lr}
- 4a2:	b082      	sub	sp, #8
- 4a4:	af00      	add	r7, sp, #0
- 4a6:	4b11      	ldr	r3, [pc, #68]	; (4ec <__main+0x4c>)
- 4a8:	603b      	str	r3, [r7, #0]
- 4aa:	4b11      	ldr	r3, [pc, #68]	; (4f0 <__main+0x50>)
- 4ac:	607b      	str	r3, [r7, #4]
- 4ae:	e007      	b.n	4c0 <__main+0x20>
- 4b0:	683a      	ldr	r2, [r7, #0]
- 4b2:	1c53      	adds	r3, r2, #1
- 4b4:	603b      	str	r3, [r7, #0]
- 4b6:	687b      	ldr	r3, [r7, #4]
- 4b8:	1c59      	adds	r1, r3, #1
- 4ba:	6079      	str	r1, [r7, #4]
- 4bc:	7812      	ldrb	r2, [r2, #0]
- 4be:	701a      	strb	r2, [r3, #0]
- 4c0:	687b      	ldr	r3, [r7, #4]
- 4c2:	4a0c      	ldr	r2, [pc, #48]	; (4f4 <__main+0x54>)
- 4c4:	4293      	cmp	r3, r2
- 4c6:	d1f3      	bne.n	4b0 <__main+0x10>
- 4c8:	4b0b      	ldr	r3, [pc, #44]	; (4f8 <__main+0x58>)
- 4ca:	607b      	str	r3, [r7, #4]
- 4cc:	e004      	b.n	4d8 <__main+0x38>
- 4ce:	687b      	ldr	r3, [r7, #4]
- 4d0:	1c5a      	adds	r2, r3, #1
- 4d2:	607a      	str	r2, [r7, #4]
- 4d4:	2200      	movs	r2, #0
- 4d6:	701a      	strb	r2, [r3, #0]
- 4d8:	687b      	ldr	r3, [r7, #4]
- 4da:	4a08      	ldr	r2, [pc, #32]	; (4fc <__main+0x5c>)
- 4dc:	4293      	cmp	r3, r2
- 4de:	d1f6      	bne.n	4ce <__main+0x2e>
- 4e0:	f7ff ffbc 	bl	45c <main>
- 4e4:	bf00      	nop
- 4e6:	3708      	adds	r7, #8
- 4e8:	46bd      	mov	sp, r7
- 4ea:	bd80      	pop	{r7, pc}
- 4ec:	0000057e 	.word	0x0000057e
- 4f0:	20000000 	.word	0x20000000
- 4f4:	20000000 	.word	0x20000000
+ 498:	4618      	mov	r0, r3
+ 49a:	370c      	adds	r7, #12
+ 49c:	46bd      	mov	sp, r7
+ 49e:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 4a2:	4770      	bx	lr
+ 4a4:	e000ed24 	.word	0xe000ed24
+
+000004a8 <__main>:
+ 4a8:	b580      	push	{r7, lr}
+ 4aa:	b082      	sub	sp, #8
+ 4ac:	af00      	add	r7, sp, #0
+ 4ae:	4b11      	ldr	r3, [pc, #68]	; (4f4 <__main+0x4c>)
+ 4b0:	603b      	str	r3, [r7, #0]
+ 4b2:	4b11      	ldr	r3, [pc, #68]	; (4f8 <__main+0x50>)
+ 4b4:	607b      	str	r3, [r7, #4]
+ 4b6:	e007      	b.n	4c8 <__main+0x20>
+ 4b8:	683a      	ldr	r2, [r7, #0]
+ 4ba:	1c53      	adds	r3, r2, #1
+ 4bc:	603b      	str	r3, [r7, #0]
+ 4be:	687b      	ldr	r3, [r7, #4]
+ 4c0:	1c59      	adds	r1, r3, #1
+ 4c2:	6079      	str	r1, [r7, #4]
+ 4c4:	7812      	ldrb	r2, [r2, #0]
+ 4c6:	701a      	strb	r2, [r3, #0]
+ 4c8:	687b      	ldr	r3, [r7, #4]
+ 4ca:	4a0c      	ldr	r2, [pc, #48]	; (4fc <__main+0x54>)
+ 4cc:	4293      	cmp	r3, r2
+ 4ce:	d1f3      	bne.n	4b8 <__main+0x10>
+ 4d0:	4b0b      	ldr	r3, [pc, #44]	; (500 <__main+0x58>)
+ 4d2:	607b      	str	r3, [r7, #4]
+ 4d4:	e004      	b.n	4e0 <__main+0x38>
+ 4d6:	687b      	ldr	r3, [r7, #4]
+ 4d8:	1c5a      	adds	r2, r3, #1
+ 4da:	607a      	str	r2, [r7, #4]
+ 4dc:	2200      	movs	r2, #0
+ 4de:	701a      	strb	r2, [r3, #0]
+ 4e0:	687b      	ldr	r3, [r7, #4]
+ 4e2:	4a08      	ldr	r2, [pc, #32]	; (504 <__main+0x5c>)
+ 4e4:	4293      	cmp	r3, r2
+ 4e6:	d1f6      	bne.n	4d6 <__main+0x2e>
+ 4e8:	f7ff ffb6 	bl	458 <main>
+ 4ec:	bf00      	nop
+ 4ee:	3708      	adds	r7, #8
+ 4f0:	46bd      	mov	sp, r7
+ 4f2:	bd80      	pop	{r7, pc}
+ 4f4:	00000586 	.word	0x00000586
  4f8:	20000000 	.word	0x20000000
  4fc:	20000000 	.word	0x20000000
+ 500:	20000000 	.word	0x20000000
+ 504:	20000000 	.word	0x20000000
 
-00000500 <Default_Handler>:
+00000508 <Default_Handler>:
 void Default_Handler(void)
 {
- 500:	b480      	push	{r7}
- 502:	af00      	add	r7, sp, #0
+ 508:	b480      	push	{r7}
+ 50a:	af00      	add	r7, sp, #0
 	while(1);
- 504:	e7fe      	b.n	504 <Default_Handler+0x4>
+ 50c:	e7fe      	b.n	50c <Default_Handler+0x4>
 
-00000506 <NMI_Handler>:
+0000050e <NMI_Handler>:
 }
 __attribute__((weak)) void NMI_Handler(void){
- 506:	b580      	push	{r7, lr}
- 508:	af00      	add	r7, sp, #0
+ 50e:	b580      	push	{r7, lr}
+ 510:	af00      	add	r7, sp, #0
   Default_Handler();
- 50a:	f7ff fff9 	bl	500 <Default_Handler>
+ 512:	f7ff fff9 	bl	508 <Default_Handler>
 }       
- 50e:	bf00      	nop
- 510:	bd80      	pop	{r7, pc}
+ 516:	bf00      	nop
+ 518:	bd80      	pop	{r7, pc}
 
-00000512 <HardFault_Handler>:
+0000051a <HardFault_Handler>:
      
 __attribute__((weak)) void HardFault_Handler(void){
- 512:	b580      	push	{r7, lr}
- 514:	af00      	add	r7, sp, #0
+ 51a:	b580      	push	{r7, lr}
+ 51c:	af00      	add	r7, sp, #0
      Default_Handler();
- 516:	f7ff fff3 	bl	500 <Default_Handler>
+ 51e:	f7ff fff3 	bl	508 <Default_Handler>
 }      
- 51a:	bf00      	nop
- 51c:	bd80      	pop	{r7, pc}
+ 522:	bf00      	nop
+ 524:	bd80      	pop	{r7, pc}
 
-0000051e <MemManage_Handler>:
+00000526 <MemManage_Handler>:
 
 __attribute__((weak)) void MemManage_Handler(void){
- 51e:	b580      	push	{r7, lr}
- 520:	af00      	add	r7, sp, #0
+ 526:	b580      	push	{r7, lr}
+ 528:	af00      	add	r7, sp, #0
  Default_Handler();
- 522:	f7ff ffed 	bl	500 <Default_Handler>
+ 52a:	f7ff ffed 	bl	508 <Default_Handler>
 }      
- 526:	bf00      	nop
- 528:	bd80      	pop	{r7, pc}
+ 52e:	bf00      	nop
+ 530:	bd80      	pop	{r7, pc}
 
-0000052a <BusFault_Handler>:
+00000532 <BusFault_Handler>:
 
 __attribute__((weak)) void BusFault_Handler(void){
- 52a:	b580      	push	{r7, lr}
- 52c:	af00      	add	r7, sp, #0
+ 532:	b580      	push	{r7, lr}
+ 534:	af00      	add	r7, sp, #0
      Default_Handler();
- 52e:	f7ff ffe7 	bl	500 <Default_Handler>
+ 536:	f7ff ffe7 	bl	508 <Default_Handler>
 }       
- 532:	bf00      	nop
- 534:	bd80      	pop	{r7, pc}
+ 53a:	bf00      	nop
+ 53c:	bd80      	pop	{r7, pc}
 
 __attribute__((weak)) void UsageFault_Handler(void){
- 536:	b580      	push	{r7, lr}
- 538:	af00      	add	r7, sp, #0
+ 53e:	b580      	push	{r7, lr}
+ 540:	af00      	add	r7, sp, #0
  Default_Handler();
- 53a:	f7ff ffe1 	bl	500 <Default_Handler>
+ 542:	f7ff ffe1 	bl	508 <Default_Handler>
 }     
- 53e:	bf00      	nop
- 540:	bd80      	pop	{r7, pc}
+ 546:	bf00      	nop
+ 548:	bd80      	pop	{r7, pc}
 
-00000542 <SecureFault_Handler>:
+0000054a <SecureFault_Handler>:
 __attribute__((weak)) void SecureFault_Handler(void){
- 542:	b580      	push	{r7, lr}
- 544:	af00      	add	r7, sp, #0
+ 54a:	b580      	push	{r7, lr}
+ 54c:	af00      	add	r7, sp, #0
  Default_Handler();
- 546:	f7ff ffdb 	bl	500 <Default_Handler>
+ 54e:	f7ff ffdb 	bl	508 <Default_Handler>
 }    
- 54a:	bf00      	nop
- 54c:	bd80      	pop	{r7, pc}
+ 552:	bf00      	nop
+ 554:	bd80      	pop	{r7, pc}
 
-0000054e <SVC_Handler>:
+00000556 <SVC_Handler>:
 __attribute__((weak)) void SVC_Handler(void){
- 54e:	b580      	push	{r7, lr}
- 550:	af00      	add	r7, sp, #0
+ 556:	b580      	push	{r7, lr}
+ 558:	af00      	add	r7, sp, #0
  Default_Handler();
- 552:	f7ff ffd5 	bl	500 <Default_Handler>
+ 55a:	f7ff ffd5 	bl	508 <Default_Handler>
 }            
- 556:	bf00      	nop
- 558:	bd80      	pop	{r7, pc}
+ 55e:	bf00      	nop
+ 560:	bd80      	pop	{r7, pc}
 
-0000055a <DebugMon_Handler>:
+00000562 <DebugMon_Handler>:
 __attribute__((weak)) void DebugMon_Handler(void){
- 55a:	b580      	push	{r7, lr}
- 55c:	af00      	add	r7, sp, #0
+ 562:	b580      	push	{r7, lr}
+ 564:	af00      	add	r7, sp, #0
  Default_Handler();
- 55e:	f7ff ffcf 	bl	500 <Default_Handler>
+ 566:	f7ff ffcf 	bl	508 <Default_Handler>
 }       
- 562:	bf00      	nop
- 564:	bd80      	pop	{r7, pc}
+ 56a:	bf00      	nop
+ 56c:	bd80      	pop	{r7, pc}
 
-00000566 <PendSV_Handler>:
+0000056e <PendSV_Handler>:
 __attribute__((weak)) void PendSV_Handler(void){
- 566:	b580      	push	{r7, lr}
- 568:	af00      	add	r7, sp, #0
+ 56e:	b580      	push	{r7, lr}
+ 570:	af00      	add	r7, sp, #0
  Default_Handler();
- 56a:	f7ff ffc9 	bl	500 <Default_Handler>
+ 572:	f7ff ffc9 	bl	508 <Default_Handler>
 }         
- 56e:	bf00      	nop
- 570:	bd80      	pop	{r7, pc}
+ 576:	bf00      	nop
+ 578:	bd80      	pop	{r7, pc}
 
-00000572 <SysTick_Handler>:
+0000057a <SysTick_Handler>:
 __attribute__((weak)) void SysTick_Handler(void){
- 572:	b580      	push	{r7, lr}
- 574:	af00      	add	r7, sp, #0
+ 57a:	b580      	push	{r7, lr}
+ 57c:	af00      	add	r7, sp, #0
  Default_Handler();
- 576:	f7ff ffc3 	bl	500 <Default_Handler>
- 57a:	bf00      	nop
- 57c:	bd80      	pop	{r7, pc}
+ 57e:	f7ff ffc3 	bl	508 <Default_Handler>
+ 582:	bf00      	nop
+ 584:	bd80      	pop	{r7, pc}
