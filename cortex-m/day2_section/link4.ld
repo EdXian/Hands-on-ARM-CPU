@@ -8,19 +8,20 @@ MEMORY{
 SECTIONS{
   .text : {
   *(.text.vector)
-  *(.text*)
+  *(.text .text.*)
   *(.rodata)
-_e_text = . ;
+
  } > rom
 
-. = 0x20000000 ; 
+_e_text = . ;
 .data  :  AT(_e_text) {
  _s_data = .  ;
- *(.data*)
+*(.data .data.*)
+ *(.ramfunc)
  _e_data = .  ;
 } > ram
 
- .bss (NOLOAD) : {
+ .bss : {
   _s_bss = .  ;
    *(.bss*)
   _e_bss =  .  ;
