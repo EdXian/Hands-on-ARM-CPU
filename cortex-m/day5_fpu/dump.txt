@@ -15,7 +15,7 @@ Disassembly of section .text:
 
 00000408 <Reset_Handler>:
  408:	46c0      	nop			; (mov r8, r8)
- 40a:	f000 f833 	bl	474 <main>
+ 40a:	f000 f851 	bl	4b0 <__main>
  40e:	e7fe      	b.n	40e <Reset_Handler+0x6>
 
 00000410 <add>:
@@ -66,12 +66,12 @@ float add1(int x, int y){
  458:	edd7 6a03 	vldr	s13, [r7, #12]
  45c:	eec6 7a26 	vdiv.f32	s15, s12, s13
  460:	ee77 7a27 	vadd.f32	s15, s14, s15
+ 464:	ee17 3a90 	vmov	r3, s15
 }
- 464:	eeb0 0a67 	vmov.f32	s0, s15
- 468:	3718      	adds	r7, #24
- 46a:	46bd      	mov	sp, r7
- 46c:	bd80      	pop	{r7, pc}
- 46e:	bf00      	nop
+ 468:	4618      	mov	r0, r3
+ 46a:	3718      	adds	r7, #24
+ 46c:	46bd      	mov	sp, r7
+ 46e:	bd80      	pop	{r7, pc}
  470:	40400000 	.word	0x40400000
 
 00000474 <main>:
@@ -81,9 +81,9 @@ int main(void){
  476:	b082      	sub	sp, #8
  478:	af00      	add	r7, sp, #0
   *((int*)0xE000ED88) |= 0x00F00000 ;
- 47a:	4b0c      	ldr	r3, [pc, #48]	; (4ac <main+0x38>)
+ 47a:	4b0b      	ldr	r3, [pc, #44]	; (4a8 <main+0x34>)
  47c:	681b      	ldr	r3, [r3, #0]
- 47e:	4a0b      	ldr	r2, [pc, #44]	; (4ac <main+0x38>)
+ 47e:	4a0a      	ldr	r2, [pc, #40]	; (4a8 <main+0x34>)
  480:	f443 0370 	orr.w	r3, r3, #15728640	; 0xf00000
  484:	6013      	str	r3, [r2, #0]
    int a=1,b=5;
@@ -96,14 +96,61 @@ int main(void){
  48e:	6839      	ldr	r1, [r7, #0]
  490:	6878      	ldr	r0, [r7, #4]
  492:	f7ff ffc3 	bl	41c <add1>
- 496:	eef0 7a40 	vmov.f32	s15, s0
- 49a:	4b05      	ldr	r3, [pc, #20]	; (4b0 <main+0x3c>)
- 49c:	edc3 7a00 	vstr	s15, [r3]
- 4a0:	2300      	movs	r3, #0
- 4a2:	4618      	mov	r0, r3
- 4a4:	3708      	adds	r7, #8
- 4a6:	46bd      	mov	sp, r7
- 4a8:	bd80      	pop	{r7, pc}
- 4aa:	bf00      	nop
- 4ac:	e000ed88 	.word	0xe000ed88
- 4b0:	20000000 	.word	0x20000000
+ 496:	4602      	mov	r2, r0
+ 498:	4b04      	ldr	r3, [pc, #16]	; (4ac <main+0x38>)
+ 49a:	601a      	str	r2, [r3, #0]
+ 49c:	2300      	movs	r3, #0
+ 49e:	4618      	mov	r0, r3
+ 4a0:	3708      	adds	r7, #8
+ 4a2:	46bd      	mov	sp, r7
+ 4a4:	bd80      	pop	{r7, pc}
+ 4a6:	bf00      	nop
+ 4a8:	e000ed88 	.word	0xe000ed88
+ 4ac:	20000000 	.word	0x20000000
+
+000004b0 <__main>:
+ 4b0:	b580      	push	{r7, lr}
+ 4b2:	b082      	sub	sp, #8
+ 4b4:	af00      	add	r7, sp, #0
+ 4b6:	4b11      	ldr	r3, [pc, #68]	; (4fc <__main+0x4c>)
+ 4b8:	603b      	str	r3, [r7, #0]
+ 4ba:	4b11      	ldr	r3, [pc, #68]	; (500 <__main+0x50>)
+ 4bc:	607b      	str	r3, [r7, #4]
+ 4be:	e007      	b.n	4d0 <__main+0x20>
+ 4c0:	683a      	ldr	r2, [r7, #0]
+ 4c2:	1c53      	adds	r3, r2, #1
+ 4c4:	603b      	str	r3, [r7, #0]
+ 4c6:	687b      	ldr	r3, [r7, #4]
+ 4c8:	1c59      	adds	r1, r3, #1
+ 4ca:	6079      	str	r1, [r7, #4]
+ 4cc:	7812      	ldrb	r2, [r2, #0]
+ 4ce:	701a      	strb	r2, [r3, #0]
+ 4d0:	687b      	ldr	r3, [r7, #4]
+ 4d2:	4a0c      	ldr	r2, [pc, #48]	; (504 <__main+0x54>)
+ 4d4:	4293      	cmp	r3, r2
+ 4d6:	d1f3      	bne.n	4c0 <__main+0x10>
+ 4d8:	4b0b      	ldr	r3, [pc, #44]	; (508 <__main+0x58>)
+ 4da:	607b      	str	r3, [r7, #4]
+ 4dc:	e004      	b.n	4e8 <__main+0x38>
+ 4de:	687b      	ldr	r3, [r7, #4]
+ 4e0:	1c5a      	adds	r2, r3, #1
+ 4e2:	607a      	str	r2, [r7, #4]
+ 4e4:	2200      	movs	r2, #0
+ 4e6:	701a      	strb	r2, [r3, #0]
+ 4e8:	687b      	ldr	r3, [r7, #4]
+ 4ea:	4a08      	ldr	r2, [pc, #32]	; (50c <__main+0x5c>)
+ 4ec:	4293      	cmp	r3, r2
+ 4ee:	d1f6      	bne.n	4de <__main+0x2e>
+ 4f0:	f7ff ffc0 	bl	474 <main>
+ 4f4:	bf00      	nop
+ 4f6:	3708      	adds	r7, #8
+ 4f8:	46bd      	mov	sp, r7
+ 4fa:	bd80      	pop	{r7, pc}
+ 4fc:	00000514 	.word	0x00000514
+ 500:	20000000 	.word	0x20000000
+ 504:	20000000 	.word	0x20000000
+ 508:	20000000 	.word	0x20000000
+ 50c:	20000004 	.word	0x20000004
+
+00000510 <g>:
+ 510:	00001234                                4...

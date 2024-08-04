@@ -1,6 +1,5 @@
 .thumb           // Q0
-.section .text   // Q1
-
+.section .text.vector   // Q1
 .global vector_start
 vector_start:
 //stack_top: .word 0x20002000
@@ -10,8 +9,9 @@ reserved: .space 0x400
 
 Reset_Handler:
     nop     
-    bl main      //Infinite loop.
-    b .
+    bl __main    
+    b .      //Infinite loop.
+
 
 .global add
 add:
@@ -21,5 +21,5 @@ mov r0, r2
 pop {r7}
 bx lr
 
-.end
 
+.end
