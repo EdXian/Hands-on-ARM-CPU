@@ -19,8 +19,8 @@ int main(void){
   // a = *(int*)0xFFFFFFFF ;
 
   /*Usage fault*/ 
- *((int*)0xE000ED88) &= ~(0x00F00000) ;
-  *(int*)0xE000ED24 |= 2 << 17; 
+ *((int*)0xE000ED88) &= ~(0x00F00000) ;  //disable FPU Power control
+  *(int*)0xE000ED24 |= 2 << 17;   //enable usage fault
  float c=1.0,b=1.0;
   b=b/c;
 

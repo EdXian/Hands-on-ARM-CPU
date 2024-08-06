@@ -82,13 +82,13 @@ int main(void){
   // a = *(int*)0xFFFFFFFF ;
 
   /*Usage fault*/ 
- *((int*)0xE000ED88) &= ~(0x00F00000) ;
+ *((int*)0xE000ED88) &= ~(0x00F00000) ;  //disable FPU Power control
  45e:	4b14      	ldr	r3, [pc, #80]	; (4b0 <main+0x58>)
  460:	681b      	ldr	r3, [r3, #0]
  462:	4a13      	ldr	r2, [pc, #76]	; (4b0 <main+0x58>)
  464:	f423 0370 	bic.w	r3, r3, #15728640	; 0xf00000
  468:	6013      	str	r3, [r2, #0]
-  *(int*)0xE000ED24 |= 2 << 17; 
+  *(int*)0xE000ED24 |= 2 << 17;   //enable usage fault
  46a:	4b12      	ldr	r3, [pc, #72]	; (4b4 <main+0x5c>)
  46c:	681b      	ldr	r3, [r3, #0]
  46e:	4a11      	ldr	r2, [pc, #68]	; (4b4 <main+0x5c>)
