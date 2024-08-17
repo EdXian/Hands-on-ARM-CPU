@@ -54,19 +54,19 @@ void task_stack_init(int i){
 
 uint8_t task_init(void(*task0)(void), void(*task1)(void))
 {
-    int *pspt;
+    void *pspt;
 
 	tcbs[0].next_tcb = &tcbs[1];
     tcbs[1].next_tcb = &tcbs[0];
     
 	task_stack_init(0);
-    pspt =  PSPBase - 0 * STACKSIZE;
-	((uint32_t*)pspt)[-2] = task0;
+    pspt =  PSPBase - 0 * STACKSIZE;    //the stack top of task0
+	((void*)pspt)[-2] = (void*)task0;
 
     task_stack_init(1);
-    pspt =  PSPBase - 1 * STACKSIZE;
-	((uint32_t*)pspt)[-2] = task1;
+    pspt =  PSPBase - 1 * STACKSIZE;    //the stack top of task1 
+	((void*)pspt)[-2] = (void*)task1;
 
-	currentPt =&tcbs[0];
+	currentTCB =&tcbs[0];
 	return 1;	
 }

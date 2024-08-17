@@ -6,4 +6,3 @@ arm-none-eabi-gcc -mthumb -mcpu=cortex-m4  -g -c task.c -o task.o
 arm-none-eabi-gcc -mthumb -mcpu=cortex-m4 -g -c __main.c -o __main.o
 arm-none-eabi-ld start.o main.o cpu.o  task.o exception.o __main.o -Tlink.ld -o example.elf
 
-
