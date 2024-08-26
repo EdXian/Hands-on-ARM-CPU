@@ -36,6 +36,10 @@ For Cortex-m based CPU, the first word in code region is stack top, while the ne
 
 ![image-20240728161827938](../png/vector_start.png)
 
+##  Stack
+
+​       In  the Cortex M-series processor, the first word in the vector table corresponds to the stack that the processor operates within. This allows developers to specify the address where the processor pushes or pops register data.    
+
 
 
 ## section 1
@@ -108,6 +112,8 @@ Q3: why  do we set stack_top at the 0x00000000 ?
 Q4: why the reset entry can be represented by  the address of Reset_handler  plus 1?
 
 Q5: why do we reserve 1k-bytes space after the reset entry?
+
+
 
 
 
